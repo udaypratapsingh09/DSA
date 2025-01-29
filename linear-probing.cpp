@@ -2,6 +2,8 @@
 
 using namespace std;
 
+const int SIZE = 10;
+
 void insert(int val,int hashTable[],int size){
     int loc = val % size;
     int i = loc;
@@ -61,53 +63,22 @@ void clear(int hashTable[],int size){
 
 void print(int hashTable[],int size){
     for (int i=0;i<size;i++){
-        cout<<hashTable[i]<<" ";
+        cout<<hashTable[i]<<endl;
     }
     cout<<endl;
 }
 
 int main(){
-    int hashTable[10];
-    clear(hashTable,10);
+    int hashTable[SIZE];
+    clear(hashTable,SIZE);
+    insert(22,hashTable,SIZE);
+    insert(12,hashTable,SIZE);
+    insert(33,hashTable,SIZE);
+    insert(44,hashTable,SIZE);
+    insert(66,hashTable,SIZE);
+    insert(55,hashTable,SIZE);
+    insert(13,hashTable,SIZE);
+    insert(43,hashTable,SIZE);
 
-    int ans=1;
-    while (ans!=0){
-        // menu
-        cout<<"0. Exit\n";
-        cout<<"1. Insert a value\n";
-        cout<<"2. Search a value\n";
-        cout<<"3. Delete a value\n";
-        cout<<"4. Clear table\n";
-        cin>>ans;
-
-        if (ans==1){
-            int val;
-            cout<<"Enter value to insert: ";
-            cin>>val;
-            insert(val,hashTable,10);
-            print(hashTable,10);
-        }
-
-        else if (ans==2){
-            int key;
-            cout<<"Enter key to search: ";
-            cin>>key;
-            search(key,hashTable,10);
-            print(hashTable,10);
-        }
-
-        else if (ans==3){
-            int key;
-            cout<<"Enter key to delete: ";
-            cin>>key;
-            del(key,hashTable,10);
-            print(hashTable,10);
-        }
-
-        else if (ans==4){
-            clear(hashTable,10);
-            print(hashTable,10);
-        }
-        cout<<"\n***************************************\n\n";
-    }
+    print(hashTable,SIZE);
 }

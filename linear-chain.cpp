@@ -1,6 +1,10 @@
 #include<iostream>
+#include <iomanip>
+#include <ios>
 #include<utility>
 using namespace std;
+
+const int SIZE = 10;
 
 void insert(int val,pair<int,int> hashTable[],int size){
     cout<<"Value to insert: "<<val<<endl;
@@ -54,7 +58,7 @@ void insert(int val,pair<int,int> hashTable[],int size){
 }
 
 int search(int key,pair<int,int> hashTable[],int size){
-    int loc = key%10;
+    int loc = key%SIZE;
     // case 1 if loc is empty we can say that value does not exist in hashTable
     if (hashTable[loc].first==-1){
         cout<<"CASE 1"<<endl;
@@ -112,9 +116,11 @@ void remove(int key,pair<int,int> hashTable[],int size){
 }
 
 void print(pair<int,int> hashTable[],int size){
+    cout<<endl;
+    cout<<"Value"<<setw(5)<<"|"<<setw(7)<<"Chain"<<endl;
     for (int i=0;i<size;i++){
-        cout<<hashTable[i].first<<" "<<hashTable[i].second;
-        cout<<endl;
+        cout<<setw(4)<<hashTable[i].first;
+        cout<<setw(6)<<"|"<<setw(6)<<hashTable[i].second<<endl;
     }
     cout<<"\n....................................\n";
 }
@@ -127,30 +133,36 @@ void clear(pair<int,int> hashTable[],int size){
 }
 
 int main(){
-    pair<int,int> hashTable[10];
-    clear(hashTable,10);
+    pair<int,int> hashTable[SIZE];
+    clear(hashTable,SIZE);
 
-    insert(55,hashTable,10);
-    print(hashTable,10);
+    insert(22,hashTable,SIZE);
+    print(hashTable,SIZE);
 
-    insert(26,hashTable,10);
-    print(hashTable,10);
+    insert(12,hashTable,SIZE);
+    print(hashTable,SIZE);
     
-    insert(15,hashTable,10);
-    print(hashTable,10);
+    insert(33,hashTable,SIZE);
+    print(hashTable,SIZE);
 
-    insert(95,hashTable,10);
-    print(hashTable,10);
+    insert(44,hashTable,SIZE);
+    print(hashTable,SIZE);
 
-    insert(77,hashTable,10);
-    print(hashTable,10);
+    insert(66,hashTable,SIZE);
+    print(hashTable,SIZE);
 
-    insert(17,hashTable,10);
-    print(hashTable,10);
+    insert(55,hashTable,SIZE);
+    print(hashTable,SIZE);
 
-    search(17,hashTable,10);
-    search(15,hashTable,10);
-    search(77,hashTable,10);
-    remove(77,hashTable,10);
-    print(hashTable,10);
+    insert(13,hashTable,SIZE);
+    print(hashTable,SIZE);
+
+    insert(43,hashTable,SIZE);
+    print(hashTable,SIZE);
+
+    // search(17,hashTable,SIZE);
+    // search(15,hashTable,SIZE);
+    // search(77,hashTable,SIZE);
+    // remove(77,hashTable,SIZE);
+    // print(hashTable,SIZE);
 }

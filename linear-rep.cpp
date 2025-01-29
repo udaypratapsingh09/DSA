@@ -32,14 +32,14 @@ void updateChain(pair<int,int> rep,pair<int,int> hashTable[],int size){
     int chainEnd = loc;
     while (hashTable[i].second != -1 && hashTable[i].second != rep.second){
         int next = hashTable[i].second;
-        // if next value has a different hash then break because original value has been
-        // replaced from that location
+        // if next value has a different hash then break because original 
+        // value has been replaced from that location
         if (hashTable[next].first%SIZE != loc) break;
         i = next;
         chainEnd = i;
     }
-        // when we reach the value which was replaced chain skips the the next value after
-        // that and we break the loop
+        // when we reach the value which was replaced chain skips the next 
+        // value after that and we break the loop
     hashTable[chainEnd].second = rep.second;
     return;
 }
@@ -60,13 +60,15 @@ void insert(int val,pair<int,int> hashTable[],int size){
         cout<<"CASE 2"<<endl;
         int i = loc;
         int chainEnd = loc;
-        // if chain exists then follow it till it ends and store the index where it ends
+        // if chain exists then follow it till it ends and store the index 
+        // where it ends
         while (hashTable[i].second != -1){
             i = hashTable[i].second;
             chainEnd = i;
         }
-        // find the first empty location after chain ends and insert value at that location
-        // also update chain end to store location where value was inserted
+        // find the first empty location after chain ends and insert value 
+        // at that location also update chain end to store location where 
+        // value was inserted
         do {
             if (hashTable[i].first==-1 || hashTable[i].first==-2){
                 cout<<"Inserted "<<" at index "<<i<<endl;
@@ -147,31 +149,31 @@ int main(){
     insert(22,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    insert(33,hashTable,SIZE);
+    insert(12,hashTable,SIZE);
     print(hashTable,SIZE);
     
-    insert(52,hashTable,SIZE);
+    insert(33,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    insert(722,hashTable,SIZE);
+    insert(44,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    insert(144,hashTable,SIZE);
+    insert(66,hashTable,SIZE);
     print(hashTable,SIZE);
 
     insert(55,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    insert(45,hashTable,SIZE);
+    insert(13,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    insert(2,hashTable,SIZE);
+    insert(43,hashTable,SIZE);
     print(hashTable,SIZE);
 
-    search(33,hashTable,SIZE);
-    search(52,hashTable,SIZE);
+    // search(33,hashTable,SIZE);
+    // search(52,hashTable,SIZE);
 
-    remove(77,hashTable,SIZE);
-    remove(72,hashTable,SIZE);
-    print(hashTable,SIZE);
+    // remove(77,hashTable,SIZE);
+    // remove(72,hashTable,SIZE);
+    // print(hashTable,SIZE);
 }
