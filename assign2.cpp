@@ -1,77 +1,105 @@
-#include <iostream>
-#include <string>
+#include<iostream>
+#include<string>
+
 using namespace std;
 
-class node {
-public:
-    string data;
-    node* next;
+const int SIZE = 10;
 
-    node(string data) {
-        this->data = data;  
-        next = nullptr;
+class Word{
+public:
+    Word *next;
+    string word,meaning;  
+    Word(){
+        this->next = nullptr;
+        this->word = "";
+        this->meaning = "";
+    }
+    Word(string word,string meaning){
+        this->next = nullptr;
+        this->word = word;
+        this->meaning = meaning;
     }
 };
 
-class separateChaining {
-    node** arr;  
-    int size;
-
+class Dictionary{
+private:
+    Word** arr;
 public:
-    separateChaining(int tableSize) {
-        size = tableSize;
-        arr = new node*[size];  
-        for (int i = 0; i < size; i++) {
-            arr[i] = nullptr;  
+    Dictionary(){
+        arr = new Word*[SIZE];
+        for (int i=0;i<SIZE;i++){
+            arr[i] = nullptr;
         }
     }
 
-    int findIndex(string name){
-        int index = 0;
-        int step = 1;
-        for(int i = 0; i < name.size(); i++){
-            index += step * (name[name.size() - i - 1]);
-            step = step * 10;
+    int getHash(string word){
+        int hash = 0;
+        for (char& c:word){
+            int n = (c%97)%65;
+            hash += n;
         }
-        return index;
+        return hash%SIZE;
     }
 
-    void insert(string name) {
-        int index = findIndex(name) % 10; 
-        node* newnode = new node(name); 
-        if (arr[index] == nullptr) { 
-            arr[index] = newnode;
-        } else {
-            newnode-> next = arr[index];
-            arr[index] = newnode;
+    void insert(string word,string meaning){
+        int index = getHash(word);
+
+        Word* newword = new Word(word,meaning);
+        if (arr[index]==nullptr){
+            arr[index] = newword;
+        }
+        else{
+            newword->next = arr[index];
+            arr[index] = newword;
         }
     }
 
     void display() {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < SIZE; i++) {
             cout << "Bucket " << i << ": ";
-            node* temp = arr[i];
+            Word* temp = arr[i];
             while (temp != nullptr) {
-                cout << temp->data << "->";
+                cout << temp->word << "->";
                 temp = temp->next;
             }
             cout << endl;
         }
     }
+
+    void search(string searchWord){
+        cout<<endl;
+        int index = getHash(searchWord);
+        Word *temp = arr[index];
+        bool found = 0;
+
+        while (temp!=nullptr){
+            if (temp->word==searchWord){
+                cout<<temp->word<<": "<<temp->meaning<<endl;
+                found = 1;
+                break;
+            }
+            temp = temp->next;
+        }
+        
+        if (!found) {
+            cout<<"The word "<<searchWord<<" could not be found"<<endl;
+        }
+    }
 };
 
-int main() {
-    separateChaining hashTable(10);  
+int main(){
+    Dictionary d;
+    d.insert("apple","a type of fruit");
+    d.insert("red","a colour");
+    d.insert("loud","having a strong sound");
+    d.insert("fast","moving quickly");
+    d.insert("cold","having a low temperature");
+    d.insert("potato","a type of root vegetable");
+    d.insert("orange","a colour;a fruit");
 
-   
-    hashTable.insert("sagar");  
-    hashTable.insert("sagar"); 
-    hashTable.insert("sharma");  
-    hashTable.insert("sagarji");   
-
-
-   
-    hashTable.display();
-
+    d.display();
+    d.search("apple");
+    d.search("orange");
+    d.search("rat");
     return 0;
 }
