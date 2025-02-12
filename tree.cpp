@@ -4,6 +4,7 @@
 #include<queue>
 #include<stack>
 #include<algorithm>
+
 using namespace std;
 
 class Node{
@@ -30,21 +31,29 @@ class BinaryTree{
 private:
     Node *root;
 
-    void clone(Node *cloneNode,Node *node){
-        if (node==nullptr) return;
-        cloneNode = new Node(node->data);
-        cloneNode->left = node->left;
-        cloneNode->right = node->right;
+    Node *clone(Node *node){
+        if (node == nullptr) return nullptr;
 
-        cout<<"Cloned a node: "<<cloneNode->data<<endl;
+        Node *newNode = new Node(node->data);
+        newNode->left = clone(node->left);
+        newNode->right = clone(node->right);
 
-        clone(cloneNode->left,node->left);
-        clone(cloneNode->right,node->right);
+        delete node;
+        node = nullptr;
 
-        cout<<"Deleting a node: "<<node->data<<endl;
-        node->remove();
-        return;
+        return newNode;
     }
+
+    Node *mirror(Node *node){
+        if (node == nullptr) return nullptr;
+
+        Node *newNode = new Node(node->data);
+        newNode->left = mirror(node->right);
+        newNode->right = mirror(node->left);
+
+        return newNode;
+    }
+
     void level_traversal_rec(queue<Node*> curr_level){
         if (curr_level.empty()) {
             return;
@@ -83,6 +92,7 @@ private:
     }
 
     void print(queue<Node*> curr_level,int gap){
+        int flag = 0;
         if (curr_level.empty()) return;
         cout<<setw(gap/2+1);
         queue<Node *> next_level;
@@ -90,7 +100,8 @@ private:
         Node *dummy = new Node(-1);
         while (!curr_level.empty()){
             curr = curr_level.front();
-            if (curr->data != -1){
+            if (curr->data > 0){
+                flag = 1;
                 if (curr->left != nullptr) next_level.push(curr->left);
                 else next_level.push(dummy);
                 if (curr->right != nullptr) next_level.push(curr->right);
@@ -98,38 +109,109 @@ private:
                     cout<<curr->data<<setw(gap+1);
             }
             
-            else 
+            else {
+                next_level.push(dummy);
+                next_level.push(dummy);
                 cout<<" "<<setw(gap+1);
+            }
             curr_level.pop();
         }
         cout<<endl;
-        print(next_level,gap/2);
+        if (flag)
+            print(next_level,gap/2);
     }
 
     int getHeight(Node *node){
         if(node == nullptr) return 0;
         return max(getHeight(node->left)+1,getHeight(node->right)+1);
     }
+
+    bool checkEqual(Node *r1, Node *r2){
+        if (r1 == nullptr && r2 == nullptr) return true;
+        if (r1 == nullptr || r2 == nullptr) return false;
+        if (r1->data != r2->data) return false;
+        return checkEqual(r1->left,r2->left);
+        return checkEqual(r1->right,r2->right);
+    }
 public:
     BinaryTree(){
         root = nullptr;
+    }
+
+    void print(){
+        if (empty()) return;
+        int height = getHeight();
+        int gap = 1<<(height);
+        gap--;
+        queue<Node *> curr_level;
+        curr_level.push(root);
+        cout<<"printing the tree: "<<endl;
+        print(curr_level,gap);
+    }
+
+    int getHeight(){
+        if (empty()) return 0;
+        return getHeight(root);
     }
 
     BinaryTree clone(){
         // create clone of binary tree and return it;
         // erase all nodes in original tree.
         BinaryTree cloneTree;
-        clone(cloneTree.root,this->root);
-        // this->root = nullptr;
+        cloneTree.root = clone(this->root);
+
+        cout<<cloneTree.root->data;
+        cout<<"Same roots: "<<(cloneTree.root == this->root)<<endl;
+
         return cloneTree;
     }
 
+    BinaryTree mirror(){
+        BinaryTree mirrorTree;
+        mirrorTree.root = mirror(this->root);
+
+        return mirrorTree;
+    }
+
+    bool checkEqual(BinaryTree& other){
+        return checkEqual(this->root,other.root);
+    }
+
+    // check if binary tree is empty
     bool empty(){
         if (root != nullptr) return false;
         cout<<"Tree is empty"<<endl;
         return true;
     }
 
+    // inserting a value in binary search tree
+    void insertBST(int val){
+        Node *newNode = new Node(val);
+
+        if (root==nullptr){
+            root = newNode;
+            return;
+        }
+        Node *parent;
+        Node *t = root;
+        while (t != nullptr){
+            parent = t;
+            if (val <= t->data) {
+                t = t->left;
+            }
+            else {
+                t = t->right;
+            }
+        }
+
+        if (val <= parent->data) {
+            parent->left = newNode;
+        }
+        else {
+            parent->right = newNode;
+        }
+    }
+    // insert to binary tree
     void insertNode(int val){
         Node *p = new Node(val);
 
@@ -166,6 +248,7 @@ public:
         }
     }
 
+    // traversals
     void level_traversal_iter(){
         if (empty()) return;
         Node *curr;
@@ -262,48 +345,32 @@ public:
         postorder_rec(root);
         cout<<endl;
     }
-    
-    void print(){
-        if (empty()) return;
-        int height = getHeight();
-        int gap = 1<<(height);
-        gap--;
-        queue<Node *> curr_level;
-        curr_level.push(root);
-        cout<<"printing the tree: "<<endl;
-        print(curr_level,gap);
-    }
-
-    int getHeight(){
-        if (empty()) return 0;
-        return getHeight(root);
-    }
 };
 
 int main(){
-    BinaryTree bt;
-    cout<<"Inserting 7"<<endl;
-    bt.insertNode(7);
+    // BinaryTree bt;
+    // cout<<"Inserting 7"<<endl;
+    // bt.insertNode(7);
     // bt.print();
 
-    cout<<"Inserting 5"<<endl;
-    bt.insertNode(5);
+    // cout<<"Inserting 5"<<endl;
+    // bt.insertNode(5);
     // bt.print();
 
-    cout<<"Inserting 3"<<endl;
-    bt.insertNode(3);
+    // cout<<"Inserting 3"<<endl;
+    // bt.insertNode(3);
     // bt.print();
 
-    cout<<"Inserting 2"<<endl;
-    bt.insertNode(2);
+    // cout<<"Inserting 2"<<endl;
+    // bt.insertNode(2);
     // bt.print();
 
-    cout<<"Inserting 1"<<endl;
-    bt.insertNode(1);
+    // cout<<"Inserting 1"<<endl;
+    // bt.insertNode(1);
     // bt.print();
 
-    cout<<"Inserting 8"<<endl;
-    bt.insertNode(8);
+    // cout<<"Inserting 8"<<endl;
+    // bt.insertNode(8);
 
     // cout<<"Inserting 9"<<endl;
     // bt.insertNode(9);
@@ -326,12 +393,32 @@ int main(){
     // cout<<"POSTORDER TRAVERSAL BY RECURSION: "<<endl;
     // bt.postorder_rec();
 
-    bt.print();
-    BinaryTree bt2;
-    bt2 = bt.clone();
-    cout<<"Cloned tree:-"<<endl;
-    bt2.print();
-    cout<<"Original:-"<<endl;
-    bt.print();
+    // bt.print();
+    // BinaryTree bt2;
+    // bt2 = bt.clone();
+    // cout<<"Cloned tree:-"<<endl;
+    // bt2.print();
+    // cout<<"Original:-"<<endl;
+    // bt.print();
+    // cout<<"Are trees equal: "<<(bt.checkEqual(bt2));
+    // BinaryTree bt3;
+    // bt3 = bt2.mirror();
+    // cout<<"Mirrored tree: "<<endl;
+    // bt3.print();
+    // bt3.insertNode(7);
+    // cout<<"Are trees equal: "<<(bt.checkEqual(bt3));
+
+    BinaryTree bst;
+    bst.insertBST(20);
+    bst.insertBST(12);
+    bst.insertBST(8);
+    bst.insertBST(30);
+    bst.insertBST(48);
+    bst.insertBST(36);
+    bst.insertBST(9);
+    bst.insertBST(23);
+    bst.insertBST(11);
+    bst.insertBST(15);
+    bst.print();
     return 0;
 }
