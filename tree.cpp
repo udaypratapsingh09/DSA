@@ -54,6 +54,14 @@ private:
         return newNode;
     }
 
+    Node *searchBST(Node *node, int key){
+        if (node == nullptr) return nullptr;
+
+        if (key == node->data) return node;
+        if (key < node->data) return searchBST(node->left,key);
+        return searchBST(node->right,key);
+    }
+
     void level_traversal_rec(queue<Node*> curr_level){
         if (curr_level.empty()) {
             return;
@@ -183,7 +191,7 @@ public:
         cout<<"Tree is empty"<<endl;
         return true;
     }
-
+// BST FUNCTIONS
     // inserting a value in binary search tree
     void insertBST(int val){
         Node *newNode = new Node(val);
@@ -210,6 +218,92 @@ public:
         else {
             parent->right = newNode;
         }
+    }
+
+    Node *searchBST(int key){
+        Node *found = searchBST(this->root,key);
+        if (found == nullptr) cout<<"Value: "<<key<<" was NOT FOUND in the BST"<<endl;
+        else cout<<"Value: "<<key<<" was FOUND in the BST"<<endl;
+        return found;
+    }
+
+    void deleteNodeBST(int key){
+        if (root == nullptr) {
+            cout<<"Value: "<<key<<" is not present in BST"<<endl;
+            return;
+        }
+
+        Node *parent=nullptr;
+        Node *t = root;
+        while (t != nullptr){
+            if (key == t->data){
+                break;
+            }
+            parent = t;
+            if (key < t->data){
+                t = t->left;
+            }
+            else {
+                t = t->right;
+            }
+        }
+        if (t==nullptr){
+            cout<<"Value: "<<key<<" is not present in BST"<<endl;
+            return;
+        }
+        // Case 1: t has no children
+        if (t->left == nullptr && t->right == nullptr){
+            // adjust left/right of parent as applicable
+            if (parent == nullptr) return; // this is true if the element to be deleted is root
+            if (key < parent->data) {
+                parent->left = nullptr;
+            }
+            else{
+                parent->right = nullptr;
+            }
+            cout<<"Found and deleted: "<<key<<" from BST"<<endl;
+            delete t;
+            return;
+        }
+        // Case 2: t has right child only
+        if (t->left == nullptr) {
+            if (parent == nullptr) return; // this is true if the element to be deleted is root
+            if (key < parent->data) {
+                parent->left = t->right;
+            }
+            else{
+                parent->right = t->right;
+            }
+            cout<<"Found and deleted: "<<key<<" from BST"<<endl;
+            delete t;
+            return;
+        }
+        // Case 3: If there is only left child
+        if (t->right == nullptr){
+            if (parent == nullptr) return; // this is true if the element to be deleted is root
+            if (key < parent->data) {
+                parent->left = t->left;
+            }
+            else{
+                parent->right = t->left;
+            }
+            cout<<"Found and deleted: "<<key<<" from BST"<<endl;
+            delete t;
+            return;
+        }
+        // Case 4: If there are two children
+        // find the smallest element in right subtree of t
+        cout<<"Found and deleted: "<<key<<" from BST"<<endl;
+        Node *mn=t->right;
+        Node *prtmn = t;
+        while (mn->left!=nullptr){
+            prtmn = mn;
+            mn = mn->left;
+        }
+        t->data = mn->data;
+        // Now delete mn
+        prtmn->left = mn->right;
+        delete mn;
     }
     // insert to binary tree
     void insertNode(int val){
@@ -419,6 +513,15 @@ int main(){
     bst.insertBST(23);
     bst.insertBST(11);
     bst.insertBST(15);
+    bst.print();
+
+    bst.deleteNodeBST(15);
+    bst.print();
+
+    bst.deleteNodeBST(30);
+    bst.print();
+
+    bst.deleteNodeBST(8);
     bst.print();
     return 0;
 }
