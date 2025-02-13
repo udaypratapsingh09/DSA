@@ -38,8 +38,8 @@ private:
         newNode->left = clone(node->left);
         newNode->right = clone(node->right);
 
-        delete node;
-        node = nullptr;
+        // delete node;
+        // node = nullptr;
 
         return newNode;
     }
@@ -439,68 +439,91 @@ public:
         postorder_rec(root);
         cout<<endl;
     }
+
+    Node *constructBST(vector<int> preorder,vector<int> inorder,int instart,int inend){
+        static int i = 0;
+        int index = -1;
+
+        Node *newNode = new Node(preorder[i]);
+
+        if (instart>inend) {
+            return nullptr;
+        }
+
+        for (index = instart;index<inend;index++){
+            if (inorder[index] == preorder[i]) break;
+        }
+        if (index==-1) return nullptr;
+
+        i++;
+        newNode->left = constructBST(preorder,inorder,instart,index-1);
+        newNode->right = constructBST(preorder,inorder,index+1,inend);
+
+        this->root = newNode;
+        i--;
+        return newNode;
+    }
 };
 
 int main(){
-    // BinaryTree bt;
-    // cout<<"Inserting 7"<<endl;
-    // bt.insertNode(7);
-    // bt.print();
+    BinaryTree bt;
+    cout<<"Inserting 7"<<endl;
+    bt.insertNode(7);
+    bt.print();
 
-    // cout<<"Inserting 5"<<endl;
-    // bt.insertNode(5);
-    // bt.print();
+    cout<<"Inserting 5"<<endl;
+    bt.insertNode(5);
+    bt.print();
 
-    // cout<<"Inserting 3"<<endl;
-    // bt.insertNode(3);
-    // bt.print();
+    cout<<"Inserting 3"<<endl;
+    bt.insertNode(3);
+    bt.print();
 
-    // cout<<"Inserting 2"<<endl;
-    // bt.insertNode(2);
-    // bt.print();
+    cout<<"Inserting 2"<<endl;
+    bt.insertNode(2);
+    bt.print();
 
-    // cout<<"Inserting 1"<<endl;
-    // bt.insertNode(1);
-    // bt.print();
+    cout<<"Inserting 1"<<endl;
+    bt.insertNode(1);
+    bt.print();
 
-    // cout<<"Inserting 8"<<endl;
-    // bt.insertNode(8);
+    cout<<"Inserting 8"<<endl;
+    bt.insertNode(8);
+    bt.print();
 
-    // cout<<"Inserting 9"<<endl;
-    // bt.insertNode(9);
-    // bt.print();
+    cout<<"Inserting 9"<<endl;
+    bt.insertNode(9);
+    bt.print();
 
-    // cout<<"LEVEL ORDER TRAVERSAL BY ITERATION: "<<endl;
-    // bt.level_traversal_iter();
-    // cout<<"LEVEL ORDER TRAVERSAL BY RECURSION: "<<endl;
-    // bt.level_traversal_rec();
-    // cout<<"INORDER TRAVERSAL BY ITERATION: "<<endl;
-    // bt.inorder_iter();
-    // cout<<"INORDER TRAVERSAL BY RECURSION: "<<endl;
-    // bt.inorder_rec();
-    // cout<<"PREORDER TRAVERSAL BY ITERATION: "<<endl;
-    // bt.preorder_iter();
-    // cout<<"PREORDER TRAVERSAL BY RECURSION: "<<endl;
-    // bt.preorder_rec();
-    // cout<<"POSTORDER TRAVERSAL BY ITERATION: "<<endl;
-    // bt.postorder_iter();
-    // cout<<"POSTORDER TRAVERSAL BY RECURSION: "<<endl;
-    // bt.postorder_rec();
+    cout<<"LEVEL ORDER TRAVERSAL BY ITERATION: "<<endl;
+    bt.level_traversal_iter();
+    cout<<"LEVEL ORDER TRAVERSAL BY RECURSION: "<<endl;
+    bt.level_traversal_rec();
+    cout<<"INORDER TRAVERSAL BY ITERATION: "<<endl;
+    bt.inorder_iter();
+    cout<<"INORDER TRAVERSAL BY RECURSION: "<<endl;
+    bt.inorder_rec();
+    cout<<"PREORDER TRAVERSAL BY ITERATION: "<<endl;
+    bt.preorder_iter();
+    cout<<"PREORDER TRAVERSAL BY RECURSION: "<<endl;
+    bt.preorder_rec();
+    cout<<"POSTORDER TRAVERSAL BY ITERATION: "<<endl;
+    bt.postorder_iter();
+    cout<<"POSTORDER TRAVERSAL BY RECURSION: "<<endl;
+    bt.postorder_rec();
 
-    // bt.print();
-    // BinaryTree bt2;
-    // bt2 = bt.clone();
-    // cout<<"Cloned tree:-"<<endl;
-    // bt2.print();
-    // cout<<"Original:-"<<endl;
-    // bt.print();
-    // cout<<"Are trees equal: "<<(bt.checkEqual(bt2));
-    // BinaryTree bt3;
-    // bt3 = bt2.mirror();
-    // cout<<"Mirrored tree: "<<endl;
-    // bt3.print();
-    // bt3.insertNode(7);
-    // cout<<"Are trees equal: "<<(bt.checkEqual(bt3));
+    BinaryTree bt2;
+    bt2 = bt.clone();
+    cout<<"Cloned tree:-"<<endl;
+    bt2.print();
+    cout<<"Original:-"<<endl;
+    bt.print();
+    cout<<"Are trees equal: "<<(bt.checkEqual(bt2));
+    BinaryTree bt3;
+    bt3 = bt2.mirror();
+    cout<<"Mirrored tree: "<<endl;
+    bt3.print();
+    cout<<"Are trees equal: "<<(bt.checkEqual(bt3));
 
     BinaryTree bst;
     bst.insertBST(20);
@@ -515,6 +538,10 @@ int main(){
     bst.insertBST(15);
     bst.print();
 
+    bst.searchBST(15);
+    bst.searchBST(11);
+    bst.searchBST(10);
+
     bst.deleteNodeBST(15);
     bst.print();
 
@@ -523,5 +550,13 @@ int main(){
 
     bst.deleteNodeBST(8);
     bst.print();
+
+    bst.inorder_rec();
+    bst.preorder_rec();
+    vector<int> preorder = {20,12,8,9,11,15,30,23,48,36};
+    vector<int> inorder = {8,9,11,12,15,20,23,30,36,48};
+    BinaryTree bst2;
+    bst2.constructBST(preorder,inorder,0,preorder.size()-1);
+    bst2.print();
     return 0;
 }
