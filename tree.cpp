@@ -442,7 +442,7 @@ public:
 
     Node *constructBST(vector<int> preorder,vector<int> inorder,int instart,int inend){
         static int i = 0;
-        int index = -1;
+        // if (instart==0 && inend==preorder.size()-1) i = 0;
 
         Node *newNode = new Node(preorder[i]);
 
@@ -450,9 +450,12 @@ public:
             return nullptr;
         }
 
+        int index = -1;
+
         for (index = instart;index<inend;index++){
             if (inorder[index] == preorder[i]) break;
         }
+
         if (index==-1) return nullptr;
 
         i++;
@@ -460,7 +463,6 @@ public:
         newNode->right = constructBST(preorder,inorder,index+1,inend);
 
         this->root = newNode;
-        i--;
         return newNode;
     }
 };
@@ -518,12 +520,12 @@ int main(){
     bt2.print();
     cout<<"Original:-"<<endl;
     bt.print();
-    cout<<"Are trees equal: "<<(bt.checkEqual(bt2));
+    cout<<"Are trees equal: "<<(bt.checkEqual(bt2))<<endl;
     BinaryTree bt3;
     bt3 = bt2.mirror();
     cout<<"Mirrored tree: "<<endl;
     bt3.print();
-    cout<<"Are trees equal: "<<(bt.checkEqual(bt3));
+    cout<<"Are trees equal: "<<(bt.checkEqual(bt3))<<endl;
 
     BinaryTree bst;
     bst.insertBST(20);
@@ -541,13 +543,18 @@ int main(){
     bst.searchBST(15);
     bst.searchBST(11);
     bst.searchBST(10);
+    cout<<"Original"<<endl;
+    bst.print();
 
+    cout<<"After deleting 15"<<endl;
     bst.deleteNodeBST(15);
     bst.print();
 
+    cout<<"After deleting 30"<<endl;
     bst.deleteNodeBST(30);
     bst.print();
 
+    cout<<"After deleting 8"<<endl;
     bst.deleteNodeBST(8);
     bst.print();
 
