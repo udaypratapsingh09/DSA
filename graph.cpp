@@ -40,16 +40,10 @@ void dfs_nr(vector<vector<int>> G,int n,int i){
     cout<<"\nNo of components: "<<components;
 }
 
-void dft(vector<vector<int>> G,int n,int i,int reset){
+void dft(vector<vector<int>> G,int n,int i){
     static vector<int> visited(n,0);
     static int depth;
     static int components;
-    if (reset){
-        depth = 0;
-        components = 0;
-        visited.clear();
-        visited.resize(n,0);
-    }
     if (components==0) components = 1;
     depth++;
     int j;
@@ -57,7 +51,7 @@ void dft(vector<vector<int>> G,int n,int i,int reset){
     visited[i] = 1;
     for (j=0;j<n;j++){
         if (visited[j]==0 && G[i][j]==1){
-            dft(G,n,j,0);
+            dft(G,n,j);
         }
     }
     depth--;
@@ -70,10 +64,13 @@ void dft(vector<vector<int>> G,int n,int i,int reset){
                 break;
             }
         }
-        if (k>=0) dft(G,n,k,0);
+        if (k>=0) dft(G,n,k);
         else{
             cout<<"\nNo of components: "<<components;
+            depth = 0;
             components = 0;
+            visited.clear();
+            visited.resize(n,0);
         }
     }
 }
@@ -164,7 +161,7 @@ int main(){
         }
         else if (ch==5){
             cout<<"********DFS Recursive*********\n";
-            dft(G,n,0,1);
+            dft(G,n,0);
             cout<<"\n****************************\n";
         }
         else if (ch==6){
