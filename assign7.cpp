@@ -2,6 +2,7 @@
 #include<vector>
 #include<utility>
 #include<algorithm>
+#include<set>
 
 using namespace std;
 
@@ -59,8 +60,24 @@ vector<Edge> kruskal(vector<Edge> edges,int n){
     return min_span_tree;
 }
 
-vector<Edge> prims(vector<Edge> edges,int n){
-    vector<Edge> min_span_tree;
+vector<int> prims(vector<Edge> edges,int n,int start){
+    sort(edges.begin(),edges.end(),sort_by_weight);
+    set<int> nodes;
+    vector<int> min_span_tree;
+    nodes.insert(start);
+    for (int i=0;i<edges.size();i++){
+        Edge e = edges[i];
+        int u = e.p1;
+        int v = e.p2;
+        if (nodes.find(u) == nodes.end() && nodes.find(v) != nodes.end()){
+            nodes.insert(u);
+            min_span_tree.push_back(u);
+        }
+        else if (nodes.find(u) != nodes.end() && nodes.find(v) == nodes.end()){
+            nodes.insert(v);
+            min_span_tree.push_back(v);
+        }
+    }
     return min_span_tree;
 }
 
@@ -85,6 +102,8 @@ int main(){
         Edge e = min_span_kruskal[i];
         cout<<e.p1<<" "<<e.p2<<" "<<e.weight<<endl;
     }
+
+    vector<int> min_span_prim = prims(edges,n,0);
     
     return 0;
 }
